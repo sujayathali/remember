@@ -1,0 +1,22 @@
+{
+  "name": "remember",
+  "version": "2.0.2",
+  "description": "Personal memory system for Cowork and Claude Code. /remember to capture chat facts to typed markdown (feedback / projects / reference / people / glossary). /checkin runs a daily ritual with auto-milestones. /refresh-wiki syncs your wiki with atoms. /ingest for bulk documents. Run /lint periodically. Zero infra, pure markdown, your data stays on your machine.",
+  "author": {
+    "name": "Sujayath & Shayan",
+    "email": "sujayath@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/sujayathali/remember",
+  "repository": "https://github.com/sujayathali/remember.git",
+  "keywords": [
+    "memory",
+    "knowledge-management",
+    "wiki",
+    "journal",
+    "second-brain",
+    "pkm",
+    "markdown",
+    "local-first"
+  ]
+}

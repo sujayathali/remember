@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "sujayath",
+  "description": "Plugins by Sujayath & Shayan for Claude Cowork and Claude Code. Focused on personal knowledge management, memory, and individual productivity.",
+  "owner": {
+    "name": "Sujayath & Shayan",
+    "email": "sujayath@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "remember",
+      "description": "Personal memory system for Cowork and Claude Code. /remember to capture chat facts to typed markdown (feedback / projects / reference / people / glossary). /checkin runs a daily ritual with auto-milestones. /refresh-wiki syncs your wiki with atoms. /ingest for bulk documents. Run /lint periodically. Zero infra, pure markdown, your data stays on your machine.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Sujayath & Shayan",
+        "email": "sujayath@gmail.com"
+      },
+      "source": "./plugins/remember",
+      "category": "productivity",
+      "homepage": "https://github.com/sujayathali/remember"
+    }
+  ]
+}
