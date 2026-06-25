@@ -1,10 +1,10 @@
 # Remember.Plugin
 
-> A plugin for Claude Cowork and Claude Code that saves your conversations as you chat and turns them into structured markdown notes.
+> A plugin for Claude Cowork and Claude Code that captures your conversations as you chat, then distills them into structured markdown notes you control.
 
 Open any Claude Cowork conversation. Type `/remember` and your chat gets distilled into typed markdown files — decisions, preferences, facts, people, and a glossary that builds itself from the acronyms and codenames you use — saved into a folder you control.
 
-As you keep talking, memory updates continuously in the background. Bring in existing documents with `/ingest`. Run `/checkin` for a daily-status briefing pulled from your calendar/email/messaging/tasks (or just from your journal, if you don't have those connected). Run `/lint` every few weeks to keep things tidy.
+As you keep talking, every turn is captured automatically to a daily journal — the durable record of what was said. Type `/remember` to distill those entries into typed, classified notes (decisions, people, facts, glossary). `/lint` checks the automatic capture is firing. Bring in existing documents with `/ingest`. Run `/checkin` for a daily-status briefing pulled from your calendar/email/messaging/tasks (or just from your journal, if you don't have those connected). Run `/lint` every few weeks to keep things tidy.
 
 **Zero infrastructure. Pure markdown. Your data stays on your machine. Plays well with other plugins — never modifies files written by another tool.**
 
@@ -30,8 +30,8 @@ As you keep talking, memory updates continuously in the background. Bring in exi
 |---|---|
 | **Remember** | Capture durable facts from the current chat into typed atomic files (5 types: feedback, projects, reference, people, glossary) + daily journal. Auto-captures acronyms, nicknames, and project codenames into a glossary that builds itself. |
 | **Ingest** | Bring existing documents (MD, TXT, PDF, Word, PowerPoint) into memory. Only new and changed files processed by default. Also enriches files written by other memory plugins (creates Remember-format mirrors with provenance, never modifies originals). |
-| **Checkin** | Daily productivity ritual — `/checkin` pulls a daily-status briefing from any connected calendar/email/messaging/task-tracker MCPs, plus your project's memory. Degrades gracefully when no connectors are configured. **v1.3+:** auto-generates weekly + monthly milestone atoms at period boundaries (Sunday-start weeks), which flow through Refresh-wiki to `wiki/achievements/` pages. |
-| **Refresh-wiki** | Synthesize existing atomic memory into the wiki layer (v1.3+). Type `/refresh-wiki` to detect drift and fill gaps. **Auto-fires** when atoms touch wiki entities (T1, targeted+batched+cooldowned), when you ask "is the wiki updated?" (T2, targeted to your query), or when 5+ daily journal files accumulate without a refresh (T3). Updates are additive; contradictions flagged not applied; foreign-format pages read-only. |
+| **Checkin** | Daily productivity ritual — `/checkin` pulls a daily-status briefing from any connected calendar/email/messaging/task-tracker MCPs, plus your project's memory. Degrades gracefully when no connectors are configured. Also auto-generates weekly + monthly milestone atoms at period boundaries (Sunday-start weeks), which flow through Refresh-wiki to `wiki/achievements/` pages. |
+| **Refresh-wiki** | Synthesize existing atomic memory into the wiki layer. Type `/refresh-wiki` to detect drift and fill gaps. **Auto-fires** when atoms touch wiki entities (T1, targeted+batched+cooldowned), when you ask "is the wiki updated?" (T2, targeted to your query), or when 5+ daily journal files accumulate without a refresh (T3). Updates are additive; contradictions flagged not applied; foreign-format pages read-only. |
 | **Start memory folder** | When you don't have a folder yet, sets up one for you |
 | **Bootstrap** | Set up the memory structure in any folder; chains to Ingest if documents are found |
 | **Lint** | Layered health check across atomic memory, journal, CLAUDE.md, and wiki. Auto-fixes legacy patterns. Silently tolerates files written by other memory plugins. |
@@ -39,13 +39,13 @@ As you keep talking, memory updates continuously in the background. Bring in exi
 ## What it does for you
 
 - **Notes that organize themselves.** Your conversations become markdown files — decisions, references, people, preferences — automatically sorted into the right folders.
-- **Works while you talk.** Important facts get captured in the background as you chat. No commands needed for everyday capture, though you can always use `/remember` to checkpoint explicitly.
+- **Captured as you talk.** Every turn is written to a journal automatically — no commands, nothing to remember. When you want it distilled into typed notes, type `/remember`; `/lint` confirms the automatic capture never silently stopped.
 - **Bring in existing documents.** Drop PDFs, Word docs, presentations, or markdown into your folder. The plugin reads them, extracts the durable facts, and adds them to your memory. Add more later — only the new ones get processed.
 - **Per-project, not one big brain.** Each project has its own memory. Share a project's folder for work without exposing your personal notes. Archive a project without entangling others.
 - **Auto-captures people.** When you mention someone with real context (a role, a decision attributed, an action they took), a profile gets created or updated. No more "wait, who was that person again?"
 - **Glossary that writes itself.** Acronyms, nicknames, project codenames — when you define one in conversation ("PSR stands for Pipeline Status Report", "Everyone calls Todd 'Toddy'", "Phoenix is the Q3 migration project"), it lands in `memory/glossary.md` and `memory/glossary/`. Next session, Claude knows your shorthand.
-- **Daily check-in (no setup required).** Type `/checkin` and get an end-of-day briefing — what's on your calendar, what's in your inbox, what's pending in Slack, what's overdue in your task tracker, what got worked on, what's next. Works fully with connected MCPs; gracefully degrades to journal-only if none are connected. Weekly + monthly milestone roll-ups happen automatically at period boundaries (v1.3+).
-- **Wiki that stays in sync (v1.3+).** Type `/refresh-wiki` anytime to sync your wiki layer with your atomic memory — or just let it happen automatically. Three auto-triggers: new atoms touching wiki entities (T1, targeted + cooldowned so it stays cheap), conversational cues ("did we document X?", "is the X page up to date?" — T2 runs before answering), or journal accumulation (T3 fires when 5+ daily journal files pile up without a refresh). Most users never type `/refresh-wiki` — it just keeps working in the background.
+- **Daily check-in (no setup required).** Type `/checkin` and get an end-of-day briefing — what's on your calendar, what's in your inbox, what's pending in Slack, what's overdue in your task tracker, what got worked on, what's next. Works fully with connected MCPs; gracefully degrades to journal-only if none are connected. Weekly + monthly milestone roll-ups happen automatically at period boundaries.
+- **Wiki that stays in sync.** Type `/refresh-wiki` anytime to sync your wiki layer with your atomic memory — or let it happen on its own. Three auto-triggers: new atoms touching wiki entities (T1, targeted + cooldowned so it stays cheap), conversational cues ("did we document X?", "is the X page up to date?" — T2 runs before answering), or journal accumulation (T3 fires when 5+ daily journal files pile up without a refresh). The auto-triggers are best-effort; `/refresh-wiki` is the reliable way to force a sync.
 - **Plays well with other plugins.** Remember never modifies files written by another tool. If you also use Anthropic's productivity:memory-management plugin (or any other plugin that writes to `memory/`), Remember reads alongside it, creates its own atomic-format mirrors with provenance, and appends to the shared glossary without touching existing rows. Use both in the same folder; they coexist by design.
 - **Works with Obsidian.** Open your folder as an Obsidian vault for a graph view of how everything connects. The plugin uses Obsidian-compatible markdown.
 - **Files you own forever.** Pure markdown in folders you choose. Open in any text editor. MIT licensed and open source. Uninstall the plugin and your notes keep working.
@@ -212,9 +212,9 @@ The same rules will apply to any future plugin that writes to `memory/`. The arc
 
 For larger projects, it's worth turning on the wiki — a synthesized knowledge layer on top of atomic memory. Pages organized by topic with cross-links between them, plus an `Open Questions` section per page and a central `gaps/dashboard.md`.
 
-The recommended threshold for opting into the wiki is **25 atomic files** as of v1.3. The canonical value lives in `skills/refresh-wiki/SKILL.md`; this README and `bootstrap-memory-project/SKILL.md` quote it here for readability. **If the threshold ever changes, grep for the value in those files and update each quoted reference** — there's no machinery making them auto-follow the canonical owner. (The convention is "one canonical owner, all other consumers carry an attribution comment.")
+The recommended threshold for opting into the wiki is **25 atomic files**. The canonical value lives in `skills/refresh-wiki/SKILL.md`; this README and `bootstrap-memory-project/SKILL.md` quote it here for readability. **If the threshold ever changes, grep for the value in those files and update each quoted reference** — there's no machinery making them auto-follow the canonical owner. (The convention is "one canonical owner, all other consumers carry an attribution comment.")
 
-In v1.3+, `/refresh-wiki` checks the count and offers to create the wiki layer when explicitly invoked past the threshold; auto-fire surfaces a once-per-session suggestion instead of silently creating structure.
+`/refresh-wiki` checks the count and offers to create the wiki layer when explicitly invoked past the threshold; auto-fire surfaces a once-per-session suggestion instead of silently creating structure.
 
 The wiki is **self-maintaining**:
 - Remember propagates new facts to affected wiki pages (via "Wiki Ingest" step 6)
@@ -237,9 +237,9 @@ remember/
 └── skills/
     ├── remember/                 ← the canonical capture command
     ├── ingest/                   ← bring existing documents into memory
-    ├── checkin/                  ← daily productivity ritual (v1.2+)
+    ├── checkin/                  ← daily productivity ritual
     ├── bootstrap-memory-project/ ← sets up memory in a folder (zero-state or existing; v2.0 absorbed start-memory-folder)
-    ├── refresh-wiki/             ← syncs wiki layer with atoms (v1.3+)
+    ├── refresh-wiki/             ← syncs wiki layer with atoms
     ├── lint/                     ← periodic health check
     └── your-new-skill/           ← yours
         └── SKILL.md
@@ -333,18 +333,18 @@ Two layers of the same concept:
 
 Bootstrap creates both. Remember writes to both simultaneously when capturing a new term. You can think of `glossary.md` as the human-readable index and `glossary/` as the machine-readable archive.
 
-**Q: I have a hand-rolled "checkin" workflow saved as a behavior rule in `memory/feedback/`. What happens after I upgrade to v1.2?**
-v1.2's `/checkin` skill generalizes that pattern into a project-agnostic command. On the first `/checkin` run in your folder, Checkin auto-detects the old behavior atom and offers to port its specifics (email accounts, calendar names, Slack workspace, focus areas) into a new `## Checkin configuration` section in your CLAUDE.md. After porting, retire the old atom (delete it or move it to `memory/feedback/archive/`) — otherwise the two will duel on every "checkin" trigger.
+**Q: I have a hand-rolled "checkin" workflow saved as a behavior rule in `memory/feedback/`. What happens?**
+The `/checkin` skill generalizes that pattern into a project-agnostic command. On the first `/checkin` run in your folder, Checkin auto-detects the old behavior atom and offers to port its specifics (email accounts, calendar names, Slack workspace, focus areas) into a new `## Checkin configuration` section in your CLAUDE.md. After porting, retire the old atom (delete it or move it to `memory/feedback/archive/`) — otherwise the two will duel on every "checkin" trigger.
 
-**Q: How does Remember keep my wiki in sync with my atoms? (v1.3+)**
-v1.3 introduced `/refresh-wiki` plus three auto-trigger mechanisms in the continuous-maintenance protocol:
-- **T1** fires when continuous maintenance writes an atom matching an entity covered by a wiki page. Targeted to the affected pages, batched per turn, per-page cooldown of 1 hour — so it stays cheap even on chatty days.
+**Q: How does Remember keep my wiki in sync with my atoms?**
+`/refresh-wiki` plus three auto-trigger mechanisms keep the wiki in sync:
+- **T1** fires when a new atom matches an entity covered by a wiki page. Targeted to the affected pages, batched per turn, per-page cooldown of 1 hour — so it stays cheap even on chatty days.
 - **T2** fires when you ask Claude "did we document X?", "is the wiki updated?", or "is the X page up to date?" Claude refreshes the relevant pages BEFORE answering, so the answer reflects current state. Navigation queries ("where's the X page?") don't trigger T2 — they're reads.
 - **T3** fires when 5+ daily journal files have accumulated since the last wiki refresh. This is the migration path for users who started atomic-only — over time, journals pile up and trigger a full wiki sync without any individual fact crossing the threshold.
 
 You can also run `/refresh-wiki` explicitly anytime — useful for targeted refreshes (`/refresh-wiki achievements`), dry-runs (`/refresh-wiki dry-run` shows what WOULD change without applying), or since-date scans (`/refresh-wiki since 2026-06-01`). Updates are additive (preserve narrative, append to `## Changelog` with source attribution); contradictions are FLAGGED, not applied; foreign-format pages are read-only per the non-interference tenet.
 
-**Q: Where do weekly and monthly summaries come from? (v1.3+)**
+**Q: Where do weekly and monthly summaries come from?**
 Checkin auto-generates them at period boundaries. The first `/checkin` run of a new Sunday-start week writes a `memory/projects/weekly-milestones-{YYYY-W##}.md` atom synthesizing the previous week's journal entries + atoms with mtimes in the period + completed TASKS items. Same for months: first checkin of a new calendar month writes `monthly-milestones-{YYYY-MM}.md`. These atoms then flow through Refresh-wiki's T1 trigger to update `wiki/achievements/` pages automatically.
 
 Catch-up: if you skip multiple periods, Checkin synthesizes the 4 most recent complete weeks and collapses older missing periods into one gap-period atom (so a 6-month-dormant folder doesn't generate 26 weekly atoms in one run). Quiet periods with no meaningful captures get a one-line journal note instead of a placeholder atom.
@@ -352,7 +352,7 @@ Catch-up: if you skip multiple periods, Checkin synthesizes the 4 most recent co
 Note: weeks are Sunday-start (US convention), using `%U` notation in filenames. So `weekly-milestones-2026-W24.md` is the week beginning Sunday June 14, 2026.
 
 **Q: My checkin journal entries now contain email subjects, attendee names, and message excerpts. Is it safe to share this folder?**
-Be aware: yes, `/checkin` writes connector content (email senders/subjects, calendar attendees, Slack snippets) into the daily journal. If you share the folder via Dropbox, Google Drive, or git, the people you share with will see that content. v1.2 doesn't add a "redact" mode — you have three options:
+Be aware: yes, `/checkin` writes connector content (email senders/subjects, calendar attendees, Slack snippets) into the daily journal. If you share the folder via Dropbox, Google Drive, or git, the people you share with will see that content. The plugin has no "redact" mode — you have three options:
 1. Don't share folders that run `/checkin` against sensitive connectors.
 2. Use a separate folder for shared work; run `/checkin` only against your personal folder.
 3. Edit the journal entries before sharing (they're plain markdown).
